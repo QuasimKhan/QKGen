@@ -25,7 +25,7 @@ const GeneratedImageCard = ({ src, loading }) => {
           {src ? (
             <>
               {/* Generated Image */}
-              <div className="relative w-full max-h-[400px] sm:max-h-[600px] bg-black rounded-3xl overflow-hidden">
+              <div className="relative w-full  bg-black rounded-3xl overflow-hidden">
                 <img
                   src={src}
                   alt="Generated"
