@@ -43,7 +43,7 @@ const GenerateImageForm = ({
       });
   };
   return (
-    <div className="flex-1 mt-48 p-4 flex flex-col gap-9 justify-center">
+    <div className="flex-1 p-4 flex flex-col gap-9 justify-center">
       <div className="flex flex-col gap-2">
         <div className="text-2xl font-medium text-primary">
           Generate Image with prompt

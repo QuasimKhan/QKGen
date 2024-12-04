@@ -4,37 +4,44 @@ import React from "react";
 import FileSaver from "file-saver";
 
 const GeneratedImageCard = ({ src, loading }) => {
+  const handleDownload = () => {
+    // This ensures the image is downloaded
+    if (src) {
+      FileSaver.saveAs(src, "download.jpg");
+    }
+  };
+
   return (
-    <div className="flex md:mt-48  flex-col gap-6 items-center justify-center p-4 border-2 border-dashed border-yellow-500 text-yellow-500/80 rounded-2xl bg-black/10 shadow-md max-w-md mx-auto">
+    <div className="flex-1  flex flex-col gap-4 items-center justify-center p-4 border-2 border-dashed border-yellow-500 text-yellow-500/80 rounded-2xl">
       {loading ? (
-        <div className="flex flex-col items-center gap-4">
-          <CircularProgress
-            style={{ color: "inherit", width: "48px", height: "48px" }}
-          />
-          <p className="text-yellow-500">Generating Your Image...</p>
+        <div className="w-full h-full flex items-center justify-center bg-black/50 rounded-3xl">
+          <div className="text-white text-center">
+            <CircularProgress style={{ color: "inherit", width: "24px", height: "24px" }} />
+            <p className="mt-2 text-lg">Wait, the image is loading...</p>
+          </div>
         </div>
       ) : (
         <>
           {src ? (
-            <div className="flex flex-col gap-4 items-center">
-              <div className="relative w-full max-h-[500px]">
+            <>
+              {/* Generated Image */}
+              <div className="relative w-full max-h-[400px] sm:max-h-[600px] bg-black rounded-3xl overflow-hidden">
                 <img
                   src={src}
                   alt="Generated"
-                  className="w-full h-auto max-h-[500px] object-contain rounded-2xl bg-gray-900"
+                  className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
                 />
+                {/* Download Button */}
+                <button
+                  onClick={handleDownload}
+                  className="absolute  bottom-4 right-4 p-3 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-400 transition-colors transform hover:scale-110 focus:outline-none"
+                >
+                  <DownloadRounded style={{ fontSize: 36 }} />
+                </button>
               </div>
-              {/* Download Button */}
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-full shadow-lg hover:bg-yellow-600 transition-colors"
-                onClick={() => FileSaver.saveAs(src, "download.jpg")}
-              >
-                <DownloadRounded />
-                Download Image
-              </button>
-            </div>
+            </>
           ) : (
-            <p className="text-yellow-500 text-center">Write a prompt to generate an image</p>
+            <p className="text-lg text-yellow-400">Write a prompt to generate an image</p>
           )}
         </>
       )}

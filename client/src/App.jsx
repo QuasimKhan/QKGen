@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const Container = styled.div`
   width: 100%;

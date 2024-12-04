@@ -29,26 +29,35 @@ export const createPost = async (req, res, next) => {
 
     // Ensure required fields are provided
     if (!name || !prompt || !photo) {
+      console.error("Missing fields in request:", { name, prompt, photo });
       return next(createError(400, "Missing required fields (name, prompt, photo)."));
     }
 
-    // Check if photo is a valid URL
+    // Log the photo URL for debugging
+    console.log("Original photo URL:", photo);
+
+    // Slice the photo URL by 23 characters
+    const slicedPhoto = photo.slice(23);
+    console.log("Sliced photo URL:", slicedPhoto);
+
+    // Check if the sliced photo is still a valid URL
     const isValidUrl = (url) => {
       try {
         new URL(url);
         return true;
-        
       } catch (error) {
+        console.error("Invalid URL format:", url);
         return false;
       }
     };
 
-    if (!isValidUrl(photo)) {
-      return next(createError(400, "Invalid photo URL."));
+    if (!isValidUrl(slicedPhoto)) {
+      console.error("Validation failed for sliced photo URL:", slicedPhoto);
+      return next(createError(400, `Invalid sliced photo URL: ${slicedPhoto}`));
     }
 
-    // Upload the photo to Cloudinary
-    const uploadedPhoto = await cloudinary.uploader.upload(photo, {
+    // Upload the sliced photo to Cloudinary
+    const uploadedPhoto = await cloudinary.uploader.upload(slicedPhoto, {
       folder: "posts", // Optional: Specify a folder in Cloudinary
     });
 
@@ -64,6 +73,6 @@ export const createPost = async (req, res, next) => {
     return res.status(201).json({ success: true, data: newPost });
   } catch (error) {
     console.error("Error creating post:", error.message);
-    next(createError(500, "Failed to create post."));
+    next(createError(500, `Failed to create post: ${error.message}`));
   }
 };

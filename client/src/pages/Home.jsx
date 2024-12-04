@@ -1,68 +1,10 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import { CircularProgress } from "@mui/material";
+import { motion } from "framer-motion";
 import SearchBar from "../components/SearchBar";
 import ImageCard from "../components/ImageCard";
-import { CircularProgress } from "@mui/material";
 import { GetPosts } from "../api";
-
-const Container = styled.div`
-  height: 100%;
-  overflow-y: scroll;
-  background: ${({ theme }) => theme.bg};
-  padding: 30px 30px;
-  padding-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  @media (max-width: 768px) {
-    padding: 6px 10px;
-  }
-`;
-
-const Headline = styled.div`
-  font-size: 34px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text_primary};
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
-  @media (max-width: 600px) {
-    font-size: 22px;
-  }
-`;
-const Span = styled.div`
-  font-size: 30px;
-  font-weight: 800;
-  color: ${({ theme }) => theme.secondary};
-
-  @media (max-width: 600px) {
-    font-size: 20px;
-  }
-`;
-
-const Wrapper = styled.div`
-  width: 100%;
-  max-width: 1400px;
-  padding: 32px 0px;
-  display: flex;
-  justify-content: center;
-`;
-
-const CardWrapper = styled.div`
-  display: grid;
-  gap: 20px;
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  @media (min-width: 640px) and (max-width: 1199px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media (max-width: 639px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
+import Footer from "../components/Footer";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -89,7 +31,7 @@ const Home = () => {
     getPosts();
   }, []);
 
-  //Search
+  // Search functionality
   useEffect(() => {
     if (!search) {
       setFilteredPosts(posts);
@@ -112,34 +54,67 @@ const Home = () => {
   }, [posts, search]);
 
   return (
-    <Container>
-      <Headline>
-        Explore popular posts in the Community!
-        <Span>⦿ Generated with AI ⦿</Span>
-      </Headline>
-      <SearchBar search={search} setSearch={setSearch} />
-      <Wrapper>
-        {error && <div style={{ color: "red" }}>{error}</div>}
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <CardWrapper>
-            {filteredPosts.length === 0 ? (
-              <>No Posts Found</>
-            ) : (
-              <>
-                {filteredPosts
-                  .slice()
-                  .reverse()
-                  .map((item, index) => (
-                    <ImageCard key={index} item={item} />
-                  ))}
-              </>
-            )}
-          </CardWrapper>
+    <div className="min-h-screen bg-gray-900 py-16 flex flex-col items-center justify-between gap-12 overflow-y-auto pb-20"> {/* Added padding-bottom */}
+      {/* Header Section */}
+      <motion.div
+        className="text-center text-white space-y-6 animate-fadeIn"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <h1 className="text-4xl font-extrabold sm:text-5xl lg:text-6xl text-yellow-400">
+          Explore Popular Posts in the Community
+        </h1>
+        <p className="text-xl font-semibold text-gray-300">⦿ Generated with AI ⦿</p>
+      </motion.div>
+
+      {/* Search Bar */}
+      <div className="w-full flex justify-center mx-auto mb-6"> {/* Centering the search bar */}
+        <SearchBar search={search} setSearch={setSearch} />
+      </div>
+
+      {/* Posts Section */}
+      <div className="w-full max-w-7xl mx-auto">
+        {error && (
+          <div className="text-red-500 text-center mb-4">{error}</div>
         )}
-      </Wrapper>
-    </Container>
+        {loading ? (
+          <div className="flex justify-center mt-12">
+            <CircularProgress className="text-yellow-400" size={60} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-12">
+            {filteredPosts.length === 0 ? (
+              <div className="text-white text-center col-span-full">No Posts Found</div>
+            ) : (
+              filteredPosts
+                .slice()
+                .reverse()
+                .map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="transform transition-all hover:scale-105 duration-300"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 0.98 }}
+                      className="relative rounded-lg overflow-hidden shadow-lg bg-black hover:bg-gray-800 transition duration-300"
+                    >
+                      <ImageCard item={item} />
+                    </motion.div>
+                  </motion.div>
+                ))
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 };
 
