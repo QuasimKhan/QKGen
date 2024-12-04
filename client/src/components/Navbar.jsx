@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AddRounded, ExploreRounded } from "@mui/icons-material";
-import Button from "./button";
+import Button from "./Button";
 
 const Navbar = () => {
   const navigate = useNavigate();
